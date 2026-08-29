@@ -233,8 +233,10 @@ class PromptTests(unittest.TestCase):
         self.assertIn("你自己的微信文件存储位置的盘和文件夹", help_text)
         self.assertIn("改成你自己的", help_text)
         self.assertIn("收藏中的笔记语音", help_text)
-        self.assertIn("full dump 文件位置", help_text)
-        self.assertIn("导出文件保存位置", help_text)
+        self.assertIn("你自己的 full dump 文件路径", help_text)
+        self.assertIn("你自己的导出文件保存目录", help_text)
+        self.assertIn("你自己的 Speex 解码器文件路径", help_text)
+        self.assertIn("你自己的 Silk V3 解码器文件路径", help_text)
         self.assertIn("YOUR_WECHAT_ID", module.DEFAULT_ACCOUNT_ROOT)
 
 
