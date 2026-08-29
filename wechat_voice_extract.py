@@ -822,19 +822,19 @@ def build_parser() -> argparse.ArgumentParser:
         description="播放收藏中的笔记语音后，自动恢复并保留 WAV 与 128 kbps MP3。"
     )
     parser.add_argument("--pid", type=int, help="手动指定主 Weixin.exe PID。")
-    parser.add_argument("--dump", help="使用已有 full dump（WSL 或 Windows 路径），跳过创建。")
+    parser.add_argument("--dump", help="使用已有 full dump 文件位置（WSL 或 Windows 路径），跳过创建。")
     parser.add_argument("--duration", type=float, help="歧义时按目标时长（秒）筛选。")
-    parser.add_argument("--output-dir", help="输出目录；默认是当前 Windows 用户桌面。")
+    parser.add_argument("--output-dir", help="指定导出文件保存位置；默认是当前 Windows 用户桌面。")
     parser.add_argument(
         "--account-root",
         default=DEFAULT_ACCOUNT_ROOT,
         help="你微信文件存储位置的盘和文件夹。",
     )
-    parser.add_argument("--decoder", default=DEFAULT_DECODER, help="speex_decode 路径。")
+    parser.add_argument("--decoder", default=DEFAULT_DECODER, help="指定 Speex 解码器文件位置。")
     parser.add_argument(
         "--silk-decoder",
         default=DEFAULT_SILK_DECODER,
-        help="Silk V3 decoder 路径。",
+        help="指定 Silk V3 解码器文件位置。",
     )
     parser.add_argument("--keep-dump", action="store_true", help="成功后仍保留脚本创建的 dump。")
     parser.add_argument("--keep-raw", action="store_true", help="成功后仍保留 raw Speex/Silk。")
