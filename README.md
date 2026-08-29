@@ -78,7 +78,7 @@ sudo apt install -y python3 python3-venv python3-pip ffmpeg git build-essential 
 python3 --version
 ffmpeg -version
 ffprobe -version
-wslpath -u 'C:\\Windows\\Temp'
+wslpath -u 'C:\Windows\Temp'
 ```
 
 `wslpath` 能把 Windows 路径转换为 WSL 路径，说明 Windows 盘已经可以从 WSL 访问。你的微信文件在其他盘时，把示例中的 `C:` 换成实际盘符验证。
@@ -135,36 +135,38 @@ python3 ~/wechat_voice_extract.py \
 公开源码故意只保留脱敏占位符：
 
 ```python
-DEFAULT_ACCOUNT_ROOT = r"E:\\微信文件\\xwechat_files\\YOUR_WECHAT_ID"
+DEFAULT_ACCOUNT_ROOT = r"E:\微信文件\xwechat_files\YOUR_WECHAT_ID"
 ```
 
 这不是可直接使用的目录。你必须把整行改成自己微信文件存储位置的盘和文件夹，或者每次运行时传入 `--account-root`。例如：
 
 ```bash
 python3 ~/wechat_voice_extract.py \
-  --account-root 'D:\\微信文件\\xwechat_files\\<你的微信文件夹>'
+  --account-root 'D:\微信文件\xwechat_files\<你的微信文件夹>'
 ```
 
 请同时替换 `D:`、中间的文件夹名称以及尖括号内容；“所有目录的地方都要改成自己的目录”包括 `--account-root`、`--dump`、`--output-dir`、`--decoder`、`--silk-decoder` 和任何复制命令中的源/目标路径。不要把真实微信 ID 写回公开仓库。
 
 ### 6. 首次运行前自检
 
-按下面顺序逐项确认：
+按下面顺序逐项确认。Speex 和 Silk 按实际音频格式至少准备一个，不要求两个都安装：
 
 ```bash
 python3 ~/wechat_voice_extract.py --help
+# 如果目标是 Speex，检查这一项
 test -x ~/wechat-speex-declib/bin/speex_decode
+# 如果目标是 Silk V3，检查这一项（不需要时可跳过）
 test -x ~/.local/bin/silk_v3_decoder
 command -v ffmpeg && command -v ffprobe
 ```
 
-然后确认脚本中没有忘记替换的占位符：
+然后确认脚本中没有忘记替换的路径占位符：
 
 ```bash
-grep -n 'YOUR_WECHAT_ID\|/path/to\|<你的' ~/wechat_voice_extract.py
+grep -n '/path/to\|<你的' ~/wechat_voice_extract.py
 ```
 
-如果仍有输出，先按上一节逐项修改；这些占位符不能用于真实提取。最后确认 `--output-dir` 指向你有写入权限、且不会自动同步到云盘或公共目录的位置。
+如果仍有输出，先按上一节逐项修改；这些占位符不能用于真实提取。公开源码可以保留 `YOUR_WECHAT_ID`，前提是每次运行都传入你自己的 `--account-root`；如果你改过源码默认值，也应确认其中没有真实账号 ID。最后确认 `--output-dir` 指向你有写入权限、且不会自动同步到云盘或公共目录的位置。
 
 ### 7. 更新脚本时的准备
 
@@ -210,14 +212,14 @@ python3 wechat_voice_extract.py \
 源码中的默认值是脱敏占位符：
 
 ```python
-DEFAULT_ACCOUNT_ROOT = r"E:\\微信文件\\xwechat_files\\YOUR_WECHAT_ID"
+DEFAULT_ACCOUNT_ROOT = r"E:\微信文件\xwechat_files\YOUR_WECHAT_ID"
 ```
 
 请把这里的示例路径改成你自己的目录，也就是你微信文件存储位置的盘和文件夹，或每次运行时传入：
 
 ```bash
 python3 wechat_voice_extract.py \
-  --account-root 'D:\\微信文件\\xwechat_files\\<你的微信文件夹>'
+  --account-root 'D:\微信文件\xwechat_files\<你的微信文件夹>'
 ```
 
 请把 `D:`、`微信文件` 和尖括号中的内容全部改成你自己的目录，不能原样复制上面的示例。脚本会在 dump 中匹配 Windows 风格的 `datapath`。
@@ -262,7 +264,7 @@ python3 wechat_voice_extract.py
 --non-interactive          多候选时不询问，直接失败
 ```
 
-其中凡是出现 `PATH`、`/path/to/...`、`D:\\微信文件...` 或其他目录示例的地方，都必须替换成你自己的实际目录。
+其中凡是出现 `PATH`、`/path/to/...`、`D:\微信文件...` 或其他目录示例的地方，都必须替换成你自己的实际目录。
 
 ## 失败处理
 
