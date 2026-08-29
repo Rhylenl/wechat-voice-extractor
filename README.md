@@ -28,6 +28,8 @@
 - Silk V3 解码器：`~/.local/bin/silk_v3_decoder`
 - Windows 管理员权限（创建 full dump 时会弹出 UAC）
 
+上面的解码器位置只是示例；如果你的安装位置不同，必须改成你自己的解码器文件路径。
+
 ## 安装解码器
 
 本项目不分发第三方解码器。请分别按照对应项目的许可和说明安装，并确保以下文件可执行：
@@ -46,6 +48,8 @@ python3 wechat_voice_extract.py \
   --decoder /path/to/speex_decode \
   --silk-decoder /path/to/silk_v3_decoder
 ```
+
+请把 `/path/to/...` 改成你自己的解码器文件路径，不能原样复制。
 
 ## 填写你微信文件存储位置的盘和文件夹
 
@@ -93,12 +97,12 @@ python3 wechat_voice_extract.py
 
 ```text
 --pid PID                  手动指定主 Weixin.exe PID；通常不需要
---dump PATH                使用已有 full dump 文件位置，跳过创建
+--dump PATH                改成你自己的 full dump 文件路径，跳过创建
 --duration SECONDS         按目标总秒数筛选元数据
---output-dir PATH          指定导出文件保存位置
+--output-dir PATH          改成你自己的导出文件保存目录
 --account-root PATH        填写你微信文件存储位置的盘和文件夹
---decoder PATH             指定 Speex 解码器文件位置
---silk-decoder PATH        指定 Silk 解码器文件位置
+--decoder PATH             改成你自己的 Speex 解码器文件路径
+--silk-decoder PATH        改成你自己的 Silk 解码器文件路径
 --keep-dump                成功后仍保留脚本创建的 dump
 --keep-raw                 成功后仍保留 raw 音频
 --non-interactive          多候选时不询问，直接失败
@@ -118,7 +122,7 @@ python3 wechat_voice_extract.py
 
 ### 没有通过三项 MD5 校验的音频
 
-最常见原因是 dump 建立得太晚、播放了其他语音，或选错了进程。重新播放收藏中的笔记语音并立即运行，不要关闭微信。失败时脚本创建的 dump 会保留供 `--dump` 重试；使用完后应按精确路径删除。
+最常见原因是 dump 建立得太晚、播放了其他语音，或选错了进程。重新播放收藏中的笔记语音并立即运行，不要关闭微信。失败时脚本创建的 dump 会保留供 `--dump` 重试；如果使用 `--dump`，请传入你自己的 dump 文件路径，使用完后应按精确路径删除。
 
 ### 找不到解码器或 ffmpeg
 
