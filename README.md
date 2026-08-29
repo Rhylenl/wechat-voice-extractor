@@ -30,6 +30,160 @@
 
 上面的解码器位置只是示例；如果你的安装位置不同，必须改成你自己的解码器文件路径。
 
+## 从零开始准备环境
+
+下面按“Windows 主机 → WSL Ubuntu → Python 脚本 → 解码器 → 微信目录”的顺序准备。所有命令中的路径都只是写法示例；看到 `D:\微信文件...`、`/path/to/...`、`<你的...>` 时，必须换成你自己的盘符、文件夹和文件路径。
+
+### 1. Windows 主机准备
+
+1. 安装并登录 Windows 微信，确认你有权处理这个账号的收藏数据。
+2. 保持微信正常运行，不要在播放后退出、重启或切换账号。
+3. 准备管理员权限。脚本创建 full dump 时，Windows 可能弹出 UAC 窗口；必须点击“是”。
+4. 预留磁盘空间。full dump 的大小取决于 `Weixin.exe` 当前内存，常见为数百 MB，也可能超过 1 GB；`C:\Dump` 所在磁盘和导出目录都应有足够空间。
+5. 先在微信设置或文件管理器中确认“微信文件存储位置”的盘和文件夹。不要把包含个人微信 ID 的真实路径提交到公开仓库或截图中。
+
+检查 WSL 是否已安装（在 Windows PowerShell 中运行）：
+
+```powershell
+wsl --status
+wsl --list --verbose
+```
+
+建议使用 WSL 2 的 Ubuntu。尚未安装时，可按微软文档安装；常见命令如下，但请先确认 Windows 版本和组织策略允许安装：
+
+```powershell
+wsl --install -d Ubuntu
+```
+
+### 2. WSL Ubuntu 准备
+
+打开 Ubuntu（不是普通 Windows CMD），确认当前确实在 WSL：
+
+```bash
+cat /proc/version
+```
+
+输出中通常会出现 `Microsoft` 或 `WSL`。然后安装脚本和可选解码器编译所需的基础工具：
+
+```bash
+sudo apt update
+sudo apt install -y python3 python3-venv python3-pip ffmpeg git build-essential autoconf automake libtool pkg-config
+```
+
+本脚本只使用 Python 标准库，不需要额外的 `pip` 第三方包。`git`、编译工具和虚拟环境是为了方便安装/维护解码器；如果你已经有可执行的解码器，可以不重复编译。
+
+检查关键程序：
+
+```bash
+python3 --version
+ffmpeg -version
+ffprobe -version
+wslpath -u 'C:\\Windows\\Temp'
+```
+
+`wslpath` 能把 Windows 路径转换为 WSL 路径，说明 Windows 盘已经可以从 WSL 访问。你的微信文件在其他盘时，把示例中的 `C:` 换成实际盘符验证。
+
+### 3. 放置 Python 脚本
+
+推荐把脚本放在当前 WSL 用户的家目录，路径形如：
+
+```text
+/home/<你的 Linux 用户名>/wechat_voice_extract.py
+```
+
+例如从下载目录或仓库复制后执行：
+
+```bash
+cp /path/to/wechat_voice_extract.py ~/wechat_voice_extract.py
+chmod 755 ~/wechat_voice_extract.py
+python3 ~/wechat_voice_extract.py --help
+```
+
+如果你想使用虚拟环境（脚本本身并不强制要求）：
+
+```bash
+python3 -m venv ~/wechat-aes-venv
+source ~/wechat-aes-venv/bin/activate
+python3 ~/wechat_voice_extract.py --help
+```
+
+看到帮助信息就表示 Python 文件可读、可执行，且命令行入口正常。以后若看到 `can't open file '/home/.../wechat_voice_extract.py'`，先执行 `ls -l ~/wechat_voice_extract.py`；文件不存在时，重新用上面的 `cp` 复制到这个准确位置，或直接运行文件的绝对路径。
+
+### 4. 准备 Speex、Silk 和 ffmpeg
+
+本仓库不捆绑第三方解码器。请从你信任的来源按其许可证安装，并把实际可执行文件路径记下来：
+
+```bash
+test -x ~/wechat-speex-declib/bin/speex_decode
+test -x ~/.local/bin/silk_v3_decoder
+command -v ffmpeg
+command -v ffprobe
+```
+
+如果检查失败，不要把示例路径原样传给脚本。改用你自己的路径，例如：
+
+```bash
+python3 ~/wechat_voice_extract.py \
+  --decoder '/home/<你的 Linux 用户名>/tools/speex_decode' \
+  --silk-decoder '/home/<你的 Linux 用户名>/tools/silk_v3_decoder'
+```
+
+`--decoder` 用于 Speex，`--silk-decoder` 用于 Silk V3；两者可以只配置实际需要的那个。解码器必须能在 WSL 中直接执行，并且与其输入格式匹配。
+
+### 5. 配置微信文件存储目录
+
+公开源码故意只保留脱敏占位符：
+
+```python
+DEFAULT_ACCOUNT_ROOT = r"E:\\微信文件\\xwechat_files\\YOUR_WECHAT_ID"
+```
+
+这不是可直接使用的目录。你必须把整行改成自己微信文件存储位置的盘和文件夹，或者每次运行时传入 `--account-root`。例如：
+
+```bash
+python3 ~/wechat_voice_extract.py \
+  --account-root 'D:\\微信文件\\xwechat_files\\<你的微信文件夹>'
+```
+
+请同时替换 `D:`、中间的文件夹名称以及尖括号内容；“所有目录的地方都要改成自己的目录”包括 `--account-root`、`--dump`、`--output-dir`、`--decoder`、`--silk-decoder` 和任何复制命令中的源/目标路径。不要把真实微信 ID 写回公开仓库。
+
+### 6. 首次运行前自检
+
+按下面顺序逐项确认：
+
+```bash
+python3 ~/wechat_voice_extract.py --help
+test -x ~/wechat-speex-declib/bin/speex_decode
+test -x ~/.local/bin/silk_v3_decoder
+command -v ffmpeg && command -v ffprobe
+```
+
+然后确认脚本中没有忘记替换的占位符：
+
+```bash
+grep -n 'YOUR_WECHAT_ID\|/path/to\|<你的' ~/wechat_voice_extract.py
+```
+
+如果仍有输出，先按上一节逐项修改；这些占位符不能用于真实提取。最后确认 `--output-dir` 指向你有写入权限、且不会自动同步到云盘或公共目录的位置。
+
+### 7. 更新脚本时的准备
+
+更新前先保留当前可用版本：
+
+```bash
+cp ~/wechat_voice_extract.py ~/wechat_voice_extract.py.bak
+```
+
+复制新版本后重新赋予权限并做帮助检查：
+
+```bash
+cp /path/to/new/wechat_voice_extract.py ~/wechat_voice_extract.py
+chmod 755 ~/wechat_voice_extract.py
+python3 ~/wechat_voice_extract.py --help
+```
+
+确认新版本能正常启动后，再进行下一次语音提取；不要在正在分析 dump 时覆盖脚本文件。
+
 ## 安装解码器
 
 本项目不分发第三方解码器。请分别按照对应项目的许可和说明安装，并确保以下文件可执行：
