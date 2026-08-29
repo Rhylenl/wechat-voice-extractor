@@ -30,6 +30,17 @@
 
 上面的解码器位置只是示例；如果你的安装位置不同，必须改成你自己的解码器文件路径。
 
+### 哪些程序是 Python 自带的？
+
+只有 Python 解释器和标准库（例如 `argparse`、`hashlib`、`mmap`）属于 Python 环境。`ffmpeg`、`ffprobe`、Speex 解码器和 Silk V3 解码器都不是 Python 自带程序，必须另外安装或准备。
+
+在 Ubuntu 中，安装 `ffmpeg` 软件包通常会同时提供两个命令：
+
+- `ffmpeg`：把解码后的 WAV 转成 128 kbps MP3。
+- `ffprobe`：读取 WAV/MP3 的时长、采样率和声道，用于完成后的验证。
+
+因此不需要单独寻找一个叫“ffprobe”的 Python 包，也不要执行 `pip install ffmpeg` 来代替系统安装。
+
 ## 从零开始准备环境
 
 下面按“Windows 主机 → WSL Ubuntu → Python 脚本 → 解码器 → 微信目录”的顺序准备。所有命令中的路径都只是写法示例；看到 `D:\微信文件...`、`/path/to/...`、`<你的...>` 时，必须换成你自己的盘符、文件夹和文件路径。
@@ -63,7 +74,15 @@ wsl --install -d Ubuntu
 cat /proc/version
 ```
 
-输出中通常会出现 `Microsoft` 或 `WSL`。然后安装脚本和可选解码器编译所需的基础工具：
+输出中通常会出现 `Microsoft` 或 `WSL`。先检查程序是否已经存在：
+
+```bash
+command -v python3
+command -v ffmpeg
+command -v ffprobe
+```
+
+如果 `ffmpeg` 或 `ffprobe` 没有输出路径，再执行安装。下面命令在 WSL Ubuntu 中运行，不是在 Windows PowerShell 中运行：
 
 ```bash
 sudo apt update
@@ -72,7 +91,7 @@ sudo apt install -y python3 python3-venv python3-pip ffmpeg git build-essential 
 
 本脚本只使用 Python 标准库，不需要额外的 `pip` 第三方包。`git`、编译工具和虚拟环境是为了方便安装/维护解码器；如果你已经有可执行的解码器，可以不重复编译。
 
-检查关键程序：
+安装完成后再次检查，三个命令都应输出 `/usr/bin/...` 或其他实际路径：
 
 ```bash
 python3 --version
@@ -80,6 +99,8 @@ ffmpeg -version
 ffprobe -version
 wslpath -u 'C:\Windows\Temp'
 ```
+
+如果 `ffmpeg -version` 和 `ffprobe -version` 都能显示版本号，说明音频转换环境已准备好。若仍提示 `command not found`，先重新打开 Ubuntu，再重复检查；不要继续运行提取脚本。
 
 `wslpath` 能把 Windows 路径转换为 WSL 路径，说明 Windows 盘已经可以从 WSL 访问。你的微信文件在其他盘时，把示例中的 `C:` 换成实际盘符验证。
 
