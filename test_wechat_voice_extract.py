@@ -225,6 +225,16 @@ class DumpCommandTests(unittest.TestCase):
         self.assertNotIn("Start-Process", batch)
 
 
+class PromptTests(unittest.TestCase):
+    def test_prompts_explain_location_placeholder_and_note_voice(self):
+        module = load_script()
+        help_text = module.build_parser().format_help()
+
+        self.assertIn("你微信文件存储位置的盘和文件夹", help_text)
+        self.assertIn("收藏中的笔记语音", help_text)
+        self.assertIn("YOUR_WECHAT_ID", module.DEFAULT_ACCOUNT_ROOT)
+
+
 if __name__ == "__main__":
     unittest.main()
 
