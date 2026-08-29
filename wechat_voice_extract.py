@@ -73,7 +73,7 @@ class ProcessInfo:
 
 
 SILK_MAGICS = (b"\x02#!SILK_V3", b"#!SILK_V3")
-# 请填写你微信文件存储位置的盘和文件夹，或传入 --account-root。
+# 请把此处改成你自己的微信文件存储目录，或传入 --account-root；不能照抄示例。
 DEFAULT_ACCOUNT_ROOT = r"E:\微信文件\xwechat_files\YOUR_WECHAT_ID"
 DEFAULT_DECODER = "~/wechat-speex-declib/bin/speex_decode"
 DEFAULT_SILK_DECODER = "~/.local/bin/silk_v3_decoder"
@@ -828,7 +828,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--account-root",
         default=DEFAULT_ACCOUNT_ROOT,
-        help="你微信文件存储位置的盘和文件夹。",
+        help="改成你自己的微信文件存储位置的盘和文件夹；不能照抄示例。",
     )
     parser.add_argument("--decoder", default=DEFAULT_DECODER, help="指定 Speex 解码器文件位置。")
     parser.add_argument(
