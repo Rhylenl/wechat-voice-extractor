@@ -1,6 +1,6 @@
 # WeChat Voice Extractor
 
-在用户本人授权的 Windows 微信环境中，将刚刚播放的收藏/笔记语音恢复为 WAV 和 128 kbps MP3。
+在用户本人授权的 Windows 微信环境中，将刚刚播放的收藏中的笔记语音恢复为 WAV 和 128 kbps MP3。
 
 > 仅限处理你本人有权访问的微信数据。不要使用本工具提取他人的聊天内容，也不要把 dump、raw 音频或日志上传到公共平台。
 
@@ -8,7 +8,7 @@
 
 微信播放语音时，会在 `Weixin.exe` 内存中出现已经解密的 Speex 或 Silk 数据。本工具按以下链路处理：
 
-1. 用户完整播放目标语音。
+1. 用户完整播放收藏中的笔记语音。
 2. 使用 Windows `comsvcs.dll` 创建主 `Weixin.exe` 的 full minidump。
 3. 解析 `Memory64ListStream`，取得 dump 中的内存范围。
 4. 从 dump 提取 `duration`、`fullsize`、`fullmd5`、`head256md5` 和 `datapath`。
@@ -45,7 +45,7 @@ python3 wechat_voice_extract.py \
   --silk-decoder /path/to/silk_v3_decoder
 ```
 
-## 配置你自己的微信账户目录
+## 填写你微信文件存储位置的盘和文件夹
 
 源码中的默认值是脱敏占位符：
 
@@ -53,19 +53,19 @@ python3 wechat_voice_extract.py \
 DEFAULT_ACCOUNT_ROOT = r"E:\\微信文件\\xwechat_files\\YOUR_WECHAT_ID"
 ```
 
-请将 `YOUR_WECHAT_ID` 替换为你自己的微信账户目录名，或每次运行时传入：
+请将这里的示例路径替换为你微信文件存储位置的盘和文件夹，或每次运行时传入：
 
 ```bash
 python3 wechat_voice_extract.py \
-  --account-root 'E:\\微信文件\\xwechat_files\\你的账户目录名'
+  --account-root '你微信文件存储位置的盘:\\你的微信文件夹'
 ```
 
 也可以使用 WSL 路径对应的 Windows 路径信息；脚本会在 dump 中匹配 Windows 风格的 `datapath`。
 
 ## 日常使用
 
-1. 打开 Windows 微信的收藏，或打开包含语音的笔记。
-2. 从头到尾完整播放目标语音。
+1. 打开 Windows 微信收藏中的笔记语音。
+2. 从头到尾完整播放收藏中的笔记语音。
 3. 播放结束后立即在 WSL 运行脚本。
 4. 如果弹出管理员授权窗口，点击“是”。
 
@@ -94,7 +94,7 @@ python3 wechat_voice_extract.py
 --dump PATH                使用已存在的 full dump，跳过创建
 --duration SECONDS         按目标总秒数筛选元数据
 --output-dir PATH          指定输出目录
---account-root PATH        指定微信账户根目录
+--account-root PATH        填写你微信文件存储位置的盘和文件夹
 --decoder PATH             指定 Speex 解码器
 --silk-decoder PATH        指定 Silk 解码器
 --keep-dump                成功后仍保留脚本创建的 dump
@@ -108,13 +108,13 @@ python3 wechat_voice_extract.py
 
 通常表示创建的是普通小型 minidump，而不是 full dump。确认已点击 UAC，并重新播放后立即运行。脚本会在分析前检查这一点。
 
-### 没有找到账户目录下的元数据
+### 没有在你微信文件存储位置的盘和文件夹下找到元数据
 
-确认 `--account-root` 指向正确的 `E:\\微信文件\\xwechat_files\\<你的账户目录>`，并确认目标语音刚刚完整播放过。
+确认 `--account-root` 已填写你微信文件存储位置的盘和文件夹，并确认收藏中的笔记语音刚刚完整播放过。
 
 ### 没有通过三项 MD5 校验的音频
 
-最常见原因是 dump 建立得太晚、播放了其他语音，或选错了进程。重新播放目标语音并立即运行，不要关闭微信。失败时脚本创建的 dump 会保留供 `--dump` 重试；使用完后应按精确路径删除。
+最常见原因是 dump 建立得太晚、播放了其他语音，或选错了进程。重新播放收藏中的笔记语音并立即运行，不要关闭微信。失败时脚本创建的 dump 会保留供 `--dump` 重试；使用完后应按精确路径删除。
 
 ### 找不到解码器或 ffmpeg
 
