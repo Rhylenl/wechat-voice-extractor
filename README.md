@@ -91,7 +91,7 @@ sudo apt install -y python3 python3-venv python3-pip ffmpeg git build-essential 
 
 本脚本只使用 Python 标准库，不需要额外的 `pip` 第三方包。`git`、编译工具和虚拟环境是为了方便安装/维护解码器；如果你已经有可执行的解码器，可以不重复编译。
 
-安装完成后再次检查，三个命令都应输出 `/usr/bin/...` 或其他实际路径：
+安装完成后再次检查：前三个命令应显示版本号，`wslpath` 应输出类似 `/mnt/c/Windows/Temp` 的 WSL 路径：
 
 ```bash
 python3 --version
