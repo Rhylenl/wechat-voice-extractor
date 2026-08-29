@@ -230,7 +230,8 @@ class PromptTests(unittest.TestCase):
         module = load_script()
         help_text = module.build_parser().format_help()
 
-        self.assertIn("你微信文件存储位置的盘和文件夹", help_text)
+        self.assertIn("你自己的微信文件存储位置的盘和文件夹", help_text)
+        self.assertIn("改成你自己的", help_text)
         self.assertIn("收藏中的笔记语音", help_text)
         self.assertIn("full dump 文件位置", help_text)
         self.assertIn("导出文件保存位置", help_text)
