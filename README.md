@@ -57,10 +57,10 @@ DEFAULT_ACCOUNT_ROOT = r"E:\\微信文件\\xwechat_files\\YOUR_WECHAT_ID"
 
 ```bash
 python3 wechat_voice_extract.py \
-  --account-root '你微信文件存储位置的盘:\\你的微信文件夹'
+  --account-root 'D:\\微信文件\\xwechat_files\\<你的微信文件夹>'
 ```
 
-也可以使用 WSL 路径对应的 Windows 路径信息；脚本会在 dump 中匹配 Windows 风格的 `datapath`。
+请把 `D:`、`微信文件` 和尖括号中的内容替换为你微信文件存储位置的盘和文件夹，不能原样复制上面的示例。脚本会在 dump 中匹配 Windows 风格的 `datapath`。
 
 ## 日常使用
 
@@ -91,12 +91,12 @@ python3 wechat_voice_extract.py
 
 ```text
 --pid PID                  手动指定主 Weixin.exe PID；通常不需要
---dump PATH                使用已存在的 full dump，跳过创建
+--dump PATH                使用已有 full dump 文件位置，跳过创建
 --duration SECONDS         按目标总秒数筛选元数据
---output-dir PATH          指定输出目录
+--output-dir PATH          指定导出文件保存位置
 --account-root PATH        填写你微信文件存储位置的盘和文件夹
---decoder PATH             指定 Speex 解码器
---silk-decoder PATH        指定 Silk 解码器
+--decoder PATH             指定 Speex 解码器文件位置
+--silk-decoder PATH        指定 Silk 解码器文件位置
 --keep-dump                成功后仍保留脚本创建的 dump
 --keep-raw                 成功后仍保留 raw 音频
 --non-interactive          多候选时不询问，直接失败
