@@ -4,6 +4,8 @@
 
 > 仅限处理你本人有权访问的微信数据。不要使用本工具提取他人的聊天内容，也不要把 dump、raw 音频或日志上传到公共平台。
 
+> **所有示例中的盘符、文件夹和文件路径都必须改成你自己的目录，不能原样复制。**
+
 ## 工作思路
 
 微信播放语音时，会在 `Weixin.exe` 内存中出现已经解密的 Speex 或 Silk 数据。本工具按以下链路处理：
@@ -53,14 +55,14 @@ python3 wechat_voice_extract.py \
 DEFAULT_ACCOUNT_ROOT = r"E:\\微信文件\\xwechat_files\\YOUR_WECHAT_ID"
 ```
 
-请将这里的示例路径替换为你微信文件存储位置的盘和文件夹，或每次运行时传入：
+请把这里的示例路径改成你自己的目录，也就是你微信文件存储位置的盘和文件夹，或每次运行时传入：
 
 ```bash
 python3 wechat_voice_extract.py \
   --account-root 'D:\\微信文件\\xwechat_files\\<你的微信文件夹>'
 ```
 
-请把 `D:`、`微信文件` 和尖括号中的内容替换为你微信文件存储位置的盘和文件夹，不能原样复制上面的示例。脚本会在 dump 中匹配 Windows 风格的 `datapath`。
+请把 `D:`、`微信文件` 和尖括号中的内容全部改成你自己的目录，不能原样复制上面的示例。脚本会在 dump 中匹配 Windows 风格的 `datapath`。
 
 ## 日常使用
 
@@ -101,6 +103,8 @@ python3 wechat_voice_extract.py
 --keep-raw                 成功后仍保留 raw 音频
 --non-interactive          多候选时不询问，直接失败
 ```
+
+其中凡是出现 `PATH`、`/path/to/...`、`D:\\微信文件...` 或其他目录示例的地方，都必须替换成你自己的实际目录。
 
 ## 失败处理
 
