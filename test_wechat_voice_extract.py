@@ -195,13 +195,13 @@ class ProcessSelectionTests(unittest.TestCase):
     def test_prefers_visible_top_level_weixin_over_larger_player_helper(self):
         module = load_script()
         processes = [
-            module.ProcessInfo(2932, 100, 500_000_000, True, "微信", False),
-            module.ProcessInfo(29436, 2932, 800_000_000, False, "", True),
+            module.ProcessInfo(1001, 100, 500_000_000, True, "微信", False),
+            module.ProcessInfo(1002, 1001, 800_000_000, False, "", True),
         ]
 
         selected = module.choose_main_weixin(processes)
 
-        self.assertEqual(selected.pid, 2932)
+        self.assertEqual(selected.pid, 1001)
 
 
 class DumpCommandTests(unittest.TestCase):
@@ -209,13 +209,13 @@ class DumpCommandTests(unittest.TestCase):
         module = load_script()
 
         batch = module.build_full_dump_batch(
-            4220,
+            4242,
             r"C:\Dump\target.dmp",
             r"TESTHOST\TestUser",
         )
 
         self.assertIn(
-            "comsvcs.dll, MiniDump 4220 C:\\Dump\\target.dmp full",
+            "comsvcs.dll, MiniDump 4242 C:\\Dump\\target.dmp full",
             batch,
         )
         self.assertIn(
