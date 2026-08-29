@@ -1,0 +1,15 @@
+# Sensitive extraction artifacts
+*.dmp
+*.raw.speex
+*.raw.silk
+*.pcm
+*.wav
+*.mp3
+
+# Local account/configuration overrides
+.env
+local_config.*
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
