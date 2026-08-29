@@ -232,6 +232,8 @@ class PromptTests(unittest.TestCase):
 
         self.assertIn("你微信文件存储位置的盘和文件夹", help_text)
         self.assertIn("收藏中的笔记语音", help_text)
+        self.assertIn("full dump 文件位置", help_text)
+        self.assertIn("导出文件保存位置", help_text)
         self.assertIn("YOUR_WECHAT_ID", module.DEFAULT_ACCOUNT_ROOT)
 
 
