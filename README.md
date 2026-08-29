@@ -152,6 +152,10 @@ python3 ~/wechat_voice_extract.py \
 `--decoder` 用于 Speex，`--silk-decoder` 用于 Silk V3；两者可以只配置实际需要的那个。解码器必须能在 WSL 中直接执行，并且与其输入格式匹配。
 
 ### 5. 配置微信文件存储目录
+<img width="198" height="204" alt="image" src="https://github.com/user-attachments/assets/efe5b780-7784-4c5a-bbb4-9e032d1efc36" />
+<img width="640" height="560" alt="image" src="https://github.com/user-attachments/assets/3265a2b4-ad8f-4d60-918e-003b4191a453" />
+<img width="1040" height="640" alt="image" src="https://github.com/user-attachments/assets/85173d56-2fa7-4f8a-bb66-f8527cfd34e6" />
+
 
 公开源码故意只保留脱敏占位符：
 
