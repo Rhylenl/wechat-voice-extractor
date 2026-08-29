@@ -846,6 +846,12 @@ def run(args: argparse.Namespace) -> tuple[Path, Path]:
     if "microsoft" not in Path("/proc/version").read_text(errors="ignore").casefold():
         raise ExtractError("请在 WSL Ubuntu 终端里运行这个脚本。")
 
+    if "YOUR_WECHAT_ID" in args.account_root:
+        raise ExtractError(
+            "请先把 --account-root 改成你自己的微信文件存储位置的盘和文件夹；"
+            "不能直接使用示例路径。"
+        )
+
     if shutil.which("ffmpeg") is None or shutil.which("ffprobe") is None:
         raise ExtractError("找不到 ffmpeg/ffprobe；请先在 WSL 安装 ffmpeg。")
 
