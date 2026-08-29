@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Windows 微信收藏语音恢复工具（在 WSL Ubuntu 中运行）。
+"""Windows 微信收藏中的笔记语音恢复工具（在 WSL Ubuntu 中运行）。
 
-日常用法：先在 Windows 微信中完整播放目标收藏语音，再运行：
+日常用法：先在 Windows 微信中完整播放收藏中的笔记语音，再运行：
 
     python3 wechat_voice_extract.py
 
@@ -73,7 +73,7 @@ class ProcessInfo:
 
 
 SILK_MAGICS = (b"\x02#!SILK_V3", b"#!SILK_V3")
-# Replace YOUR_WECHAT_ID or pass --account-root for your own account.
+# 请填写你微信文件存储位置的盘和文件夹，或传入 --account-root。
 DEFAULT_ACCOUNT_ROOT = r"E:\微信文件\xwechat_files\YOUR_WECHAT_ID"
 DEFAULT_DECODER = "~/wechat-speex-declib/bin/speex_decode"
 DEFAULT_SILK_DECODER = "~/.local/bin/silk_v3_decoder"
@@ -639,7 +639,7 @@ def filter_metadata_by_duration(
     ) or "无"
     raise ExtractError(
         f"dump 中没有接近 {duration_seconds:g} 秒的语音元数据；"
-        f"本次只发现：{found}。请确认是在目标语音播放后立即创建的 dump。"
+        f"本次只发现：{found}。请确认是在播放收藏中的笔记语音后立即创建的 dump。"
     )
 
 
@@ -659,8 +659,8 @@ def select_voice_match(
 ) -> VoiceMatch:
     if not matches:
         raise ExtractError(
-            "没有找到同时通过 fullsize、head256md5 和 fullmd5 校验的原始 Speex。"
-            "请重新完整播放目标语音后立即运行；当前 dump 会保留。"
+            "没有找到同时通过 fullsize、head256md5 和 fullmd5 校验的原始 Speex/Silk。"
+            "请重新完整播放收藏中的笔记语音后立即运行；当前 dump 会保留。"
         )
 
     groups: dict[str, list[VoiceMatch]] = {}
@@ -819,13 +819,17 @@ def _normalise_wsl_path(value: str) -> Path:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="播放 Windows 微信收藏语音后，自动恢复并保留 WAV 与 128 kbps MP3。"
+        description="播放收藏中的笔记语音后，自动恢复并保留 WAV 与 128 kbps MP3。"
     )
     parser.add_argument("--pid", type=int, help="手动指定主 Weixin.exe PID。")
     parser.add_argument("--dump", help="使用已有 full dump（WSL 或 Windows 路径），跳过创建。")
     parser.add_argument("--duration", type=float, help="歧义时按目标时长（秒）筛选。")
     parser.add_argument("--output-dir", help="输出目录；默认是当前 Windows 用户桌面。")
-    parser.add_argument("--account-root", default=DEFAULT_ACCOUNT_ROOT, help="微信账户根目录。")
+    parser.add_argument(
+        "--account-root",
+        default=DEFAULT_ACCOUNT_ROOT,
+        help="你微信文件存储位置的盘和文件夹。",
+    )
     parser.add_argument("--decoder", default=DEFAULT_DECODER, help="speex_decode 路径。")
     parser.add_argument(
         "--silk-decoder",
@@ -885,8 +889,8 @@ def run(args: argparse.Namespace) -> tuple[Path, Path]:
                 account_metadata = [item for item in metadata if item.account_path_match]
                 if not account_metadata:
                     raise ExtractError(
-                        "没有在指定微信账户目录下找到可信的 Speex/Silk 元数据。"
-                        "请确认 --account-root，或重新播放收藏语音后重试。"
+                        "没有在你微信文件存储位置的盘和文件夹下找到可信的 Speex/Silk 元数据。"
+                        "请确认 --account-root，或重新播放收藏中的笔记语音后重试。"
                     )
                 account_metadata = filter_metadata_by_duration(
                     account_metadata, args.duration
@@ -916,7 +920,7 @@ def run(args: argparse.Namespace) -> tuple[Path, Path]:
                 metadata_item = selected.metadata
                 actual_head_md5 = hashlib.md5(selected.head_bytes).hexdigest()
 
-                print("\n目标语音元数据：")
+                print("\n收藏中的笔记语音元数据：")
                 print(f"  format     : {metadata_item.data_format}")
                 print(f"  duration   : {metadata_item.duration_ms} ms")
                 print(f"  fullsize   : {metadata_item.full_size}")
