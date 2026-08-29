@@ -160,14 +160,14 @@ python3 ~/wechat_voice_extract.py \
 公开源码故意只保留脱敏占位符：
 
 ```python
-DEFAULT_ACCOUNT_ROOT = r"E:\微信文件\xwechat_files\YOUR_WECHAT_ID"
+DEFAULT_ACCOUNT_ROOT = r"E:\微信文件\xwechat_files\wxid_xxxxxx"
 ```
 
 这不是可直接使用的目录。你必须把整行改成自己微信文件存储位置的盘和文件夹，或者每次运行时传入 `--account-root`。例如：
 
 ```bash
 python3 ~/wechat_voice_extract.py \
-  --account-root 'D:\微信文件\xwechat_files\<你的微信文件夹>'
+  --account-root 'D:\微信文件\xwechat_files\wxid_xxxxx'
 ```
 
 请同时替换 `D:`、中间的文件夹名称以及尖括号内容；“所有目录的地方都要改成自己的目录”包括 `--account-root`、`--dump`、`--output-dir`、`--decoder`、`--silk-decoder` 和任何复制命令中的源/目标路径。不要把真实微信 ID 写回公开仓库。
